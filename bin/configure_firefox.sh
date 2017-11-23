@@ -39,11 +39,6 @@ function install_adblock_plus(){
     rm /tmp/${file_name}
 }
 
-function configure_adblock_plus(){
-    mv ${local_profile}/adblockplus/patterns.ini ${local_profile}/adblockplus/patterns.ini.orig
-    mv ${HOME}/bin/adblock_plus_patterns.ini ${local_profile}/adblockplus/patterns.ini
-}
-
 
 function set_pref(){
     echo "user_pref(\"${1}\", ${2});" >> ${local_prefs}
