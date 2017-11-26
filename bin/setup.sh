@@ -3,19 +3,22 @@
 # Setup working folder
 current_location=$(pwd)
 if [[ "$current_location" != "/tmp/bin" ]]; then
-    mkdir -p /tmp/bin
-    cp * /tmp/bin/
     cd /tmp/bin
 fi
-sudo chmod -R 777 /tmp/bin
+chmod -R 777 /tmp/bin
 
 # Configure package manager.
-sudo sed -i.bak 's|# deb http://archive.canonical.com/ubuntu xenial partner|deb http://archive.canonical.com/ubuntu xenial partner|g' /etc/apt/sources.list
-sudo apt-get update -qq
+#sed -i.bak 's|# deb http://archive.canonical.com/ubuntu artful partner|deb http://archive.canonical.com/ubuntu artful partner|g' /etc/apt/sources.list
+sed -i.bak 's|# \(deb http://archive.canonical.com/ubuntu artful partner\)|\1|g' /etc/apt/sources.list
+apt-get update -qq
+
+# Install core apps and utilities
+core_packages="git htop mc mtr pv"
+apt-get install -y ${core_packages}
 
 # Configure Grub
-sudo sed -i.bak 's|GRUB_CMDLINE_LINUX_DEFAULT="splash quiet"|GRUB_CMDLINE_LINUX_DEFAULT=""|' /etc/default/grub
-sudo update-grub
+sed -i.bak 's|\(GRUB_CMDLINE_LINUX_DEFAULT="\)splash quiet"|\1"|' /etc/default/grub
+update-grub
 
 # Configure network interfaces
 
@@ -28,13 +31,16 @@ net.ipv6.conf.default.disable_ipv6 = 1
 net.ipv6.conf.lo.disable_ipv6 = 1
 EOF
 
-# Setup user
-/tmp/bin/configure_user.sh
-
 # Final action:
 # Setup firewall
 sudo ufw allow ssh
 sudo ufw default deny
-sudo ufw enable
+sudo ufw enable << EOF
+y
+EOF
 
+# Cleanup temporary settings and reboot
 usermod -p '!' root
+sed -i 's/^\(PermitRootLogin\) yes$/\1 no/' /etc/ssh/sshd_config
+
+#shutdown -r now
