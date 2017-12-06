@@ -12,3 +12,9 @@ else
     scp -r $ssh_options bin root@${ip_addr}:/tmp/
     time ssh $ssh_options root@${ip_addr} bash /tmp/bin/setup.sh
 fi
+
+exit 0
+
+ip_addr=10.0.0.226
+ssh_options='-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
+ssh $ssh_options user@${ip_addr}

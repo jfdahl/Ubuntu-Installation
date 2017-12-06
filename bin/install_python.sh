@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-~/bin/install.sh -y python3-pip python3-setuptools && pip3 install virtualenvwrapper
+sudo apt-get install -y python3-pip python3-setuptools && sudo pip3 install virtualenvwrapper
 
-cat << EOF >> /tmp/bin/env.sh
+cat << EOF >> /home/public/bin/env.sh
 # Python and VirtualEnv Settings:
 VIRTUALENVWRAPPER_PYTHON=\$(which python3)
 

@@ -42,3 +42,10 @@ Scripts to install and configure a basic Ubuntu CORE system with options for gui
     - Run the start script from another system with network access to the target:
    start.sh target_system_ip_address
 - Use the root password determined in step 2 above to login.
+
+
+# TODO List
+1. Configure wifi detection and setup.
+- Configure LibreOffice installation.
+- Configure Firefox .desktop file and menu entries.
+- Refactor network settings.
