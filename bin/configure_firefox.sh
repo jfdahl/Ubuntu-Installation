@@ -66,6 +66,5 @@ function set_local_preferenes(){
     set_pref 'browser.reader.detectedFirstArticle' true
 }
 
-
 set_local_preferenes
 install_adblock_plus
