@@ -7,19 +7,21 @@ if [[ "$current_location" != "/tmp/bin" ]]; then
     cp * /tmp/bin/
     cd /tmp/bin
 fi
-sudo chmod -R 777 /tmp/bin
+chmod -R 777 /tmp/bin
 
 # Configure package manager.
-sudo sed -i.bak 's|# deb http://archive.canonical.com/ubuntu xenial partner|deb http://archive.canonical.com/ubuntu xenial partner|g' /etc/apt/sources.list
-sudo apt-get update -qq
+sed -i.bak 's|# deb http://archive.canonical.com/ubuntu xenial partner|deb http://archive.canonical.com/ubuntu xenial partner|g' /etc/apt/sources.list
+apt-get update -qq
 
 # Configure Grub
-sudo sed -i.bak 's|GRUB_CMDLINE_LINUX_DEFAULT="splash quiet"|GRUB_CMDLINE_LINUX_DEFAULT=""|' /etc/default/grub
-sudo update-grub
+sed -i.bak 's|GRUB_CMDLINE_LINUX_DEFAULT="splash quiet"|GRUB_CMDLINE_LINUX_DEFAULT=""|' /etc/default/grub
+update-grub
 
 # Configure network interfaces
 
 # Disable DNSMASQ
+sed -i.bak 's/^dns=dnsmasq/#dns=dnsmasq/' /etc/NetworkManager/NetworkManager.conf
+systemctl restart network
 
 # Disable IPV6
 echo >> /etc/sysctl.conf << EOF
@@ -33,8 +35,8 @@ EOF
 
 # Final action:
 # Setup firewall
-sudo ufw allow ssh
-sudo ufw default deny
-sudo ufw enable
+ufw allow ssh
+ufw default deny
+ufw enable
 
 usermod -p '!' root

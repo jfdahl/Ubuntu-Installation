@@ -33,9 +33,9 @@ ip_addr=${1}
 if [[ "${ip_addr}" = "local" ]]; then
     cp -r bin /tmp/
     cd /tmp/bin
-    time bash /tmp/bin/setup.sh
+    time bash sudo /tmp/bin/setup.sh
 else
     ssh_options='-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
     scp -r $ssh_options bin ${username}@${ip_addr}:/tmp/
-    time ssh $ssh_options ${username}@${ip_addr} bash /tmp/bin/setup.sh
+    time ssh $ssh_options ${username}@${ip_addr} bash sudo /tmp/bin/setup.sh
 fi
