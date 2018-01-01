@@ -13,5 +13,3 @@ else
     scp -r $ssh_options bin ${user}@${ip_addr}:/tmp/
     time ssh $ssh_options ${user}@${ip_addr} sudo bash /tmp/bin/setup.sh
 fi
-
-exit 0
