@@ -28,7 +28,7 @@ xfconf-query --channel xfce4-desktop --property /desktop-icons/file-icons/show-f
 xfconf-query --channel xfce4-desktop --property /desktop-icons/file-icons/show-home --create --type bool --set false
 xfconf-query --channel xfce4-desktop --property /desktop-icons/file-icons/show-trash --create --type bool --set false
 
-[ -f $(which dconf) ] || apt install dconf-editor
+[ $(which dconf) ] || sudo apt install -y dconf-cli
 
 #Configure mousepad
 dconf write /org/xfce/mousepad/preferences/view/indent-width 4
