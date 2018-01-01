@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Depends: Firefox is installed
 
-[ $(which firefox) ] || exit 1
+[ $(which firefox) ] || sudo /home/public/bin/install_firefox.sh || exit 1
 
 home_page=http://ipinfo.io/
 
