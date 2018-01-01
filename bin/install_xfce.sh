@@ -6,3 +6,6 @@ packages="xfce4 xfce4-whiskermenu-plugin gvfs alsa-utils xscreensaver mousepad"
 $VBOX && packages="${packages} dkms build-essential"
 
 sudo apt install -y ${packages}
+
+# TODO:
+# Configure the panel
