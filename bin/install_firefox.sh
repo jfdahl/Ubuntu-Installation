@@ -19,6 +19,7 @@ Exec=${install_location}/firefox/firefox %F
 Icon=${install_location}/firefox/browser/icons/mozicon128.png
 Type=Application
 StartupNotify=true
-Categories=GNOME;GTK;Internet;
-MimeType=text/plain;
+Categories=Network;WebBrowser
+Terminal=false
+MimeType=text/plain
 EOF
