@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 local_file_location=/tmp/visual_studio_code.deb
-remote_file_location=https://go.microsoft.com/fwlink/?LinkID=620884 # 64bit tarball
-remote_file_location=https://go.microsoft.com/fwlink/?LinkID=620882 # 64bit osx package
+# remote_file_location=https://go.microsoft.com/fwlink/?LinkID=620884 # 64bit tarball
+# remote_file_location=https://go.microsoft.com/fwlink/?LinkID=620882 # 64bit osx package
 remote_file_location=https://go.microsoft.com/fwlink/?LinkID=760868 # 64bit deb package
 
 wget -O ${local_file_location} ${remote_file_location} && \
