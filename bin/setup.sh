@@ -49,7 +49,9 @@ EOF
 # Setup firewall
 ufw allow ssh
 ufw default deny
-ufw enable
+ufw enable << EOF
+y
+EOF
 
 # Cleanup temporary settings and reboot
 usermod -p '!' root
