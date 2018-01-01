@@ -30,6 +30,8 @@ Scripts to install and configure a basic Ubuntu CORE system with options for gui
 1. Login with the default user account.
 - Set the root password temporarily. The script will reset it.
 - Get the accessible IP Address of the target system.
+- Install the SSH server
+        apt install ssh
 - Add the following line to the /etc/ssh/sshd_config file:
         PermitRootLogin yes
 - Restart the SSH service:
