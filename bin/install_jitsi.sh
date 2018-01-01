@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Pass the "-r" parameter to uninstall the Jitsi suite.
-if ["${1}" == "-r"]; then
+if [["${1}" == "-r"]]; then
   apt purge -y jigasi jitsi-meet jitsi-meet-web-config jitsi-meet-web jicofo jitsi-videobridge
   apt purge -y jigasi jitsi-meet jitsi-meet-web-config jitsi-meet-web jicofo jitsi-videobridge
 else
@@ -10,3 +10,4 @@ else
   apt update && apt -y install jitsi-meet
   echo "NOTE: To install a Let's Encrypt certificate, execute the following:"
   echo "/usr/share/jitsi-meet/scripts/install-letsencrypt-cert.sh"
+fi
