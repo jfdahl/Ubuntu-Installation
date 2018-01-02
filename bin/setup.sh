@@ -10,8 +10,8 @@ mkdir -p /home/public/bin
 cp -r * /home/public/bin/
 chown -R root:users /home/public
 chmod -R 775 /home/public/bin
-ln -s /home/public/bin /etc/skel/bin
-ln -s /home/public/bin /home/user/bin
+cp -r /home/public/bin /etc/skel/bin
+cp -r /home/public/bin /home/user/bin
 
 # Configure package manager.
 #sed -i.bak 's|# deb http://archive.canonical.com/ubuntu artful partner|deb http://archive.canonical.com/ubuntu artful partner|g' /etc/apt/sources.list
@@ -54,6 +54,7 @@ y
 EOF
 
 # Cleanup temporary settings and reboot
+usermod -a -G users user
 usermod -p '!' root
 sed -i 's/^\(PermitRootLogin\) yes$/\1 no/' /etc/ssh/sshd_config
 
