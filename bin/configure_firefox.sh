@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 # Depends: Firefox is installed
 
-[ $(which firefox) ] || sudo /home/public/bin/install_firefox.sh || exit 1
+[ $(which firefox) ] || \
+sudo /home/public/bin/install_firefox.sh
+|| exit 1
 
 home_page=http://ipinfo.io/
 
@@ -16,8 +18,6 @@ global_prefs=/etc/firefox/syspref.js
 local_prefs=${local_profile}/prefs.js
 touch ${local_prefs}
 
-# cwd=$(pwd)
-# cd ${ffconfig}
 cat << EOF >> ${ffconfig}/profiles.ini
 [General]
 StartWithLastProfile=1
@@ -29,10 +29,7 @@ Path=profile.default
 Default=1
 EOF
 
-# cd ${cwd}
-
 function install_adblock_plus(){
-    #[ -f ${local_profile}/adblockplus/patterns.ini ] && return
     file_name=addon-1865-latest.xpi
     wget -q -O /tmp/${file_name} https://addons.mozilla.org/firefox/downloads/latest/adblock-plus/${file_name}
     firefox /tmp/${file_name} 2>/dev/null
