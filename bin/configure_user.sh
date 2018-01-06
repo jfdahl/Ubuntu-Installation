@@ -50,3 +50,7 @@ MiscSlimTabs=TRUE
 MiscMenubarDefault=FALSE
 MiscConfirmClose=TRUE
 EOF
+
+
+# TODO:
+# Configure the panel
