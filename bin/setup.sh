@@ -12,7 +12,7 @@ chown -R root:users /home/public
 chmod -R 775 /home/public/bin
 cp -r /home/public/bin /etc/skel/bin
 cp -r /home/public/bin /home/user/bin
-chown -R user:user /home/usr/bin
+chown -R user:user /home/user/bin
 
 # Configure package manager.
 #sed -i.bak 's|# deb http://archive.canonical.com/ubuntu artful partner|deb http://archive.canonical.com/ubuntu artful partner|g' /etc/apt/sources.list
