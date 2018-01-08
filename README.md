@@ -28,12 +28,12 @@ Scripts to install and configure a basic Ubuntu CORE system with options for gui
 
 # Prepare to configure.
 1. Login with the default user account.
-- Set the root password temporarily. The script will reset it.
-        sudo chpasswd root:root
-- Get the accessible IP Address of the target system.
-        ip addr
 - Install the SSH server if it was not installed during the base installation.
         apt install ssh
+- Get the accessible IP Address of the target system.
+        ip addr
+- Set the root password temporarily. The script will reset it.
+        sudo chpasswd root:root
 - Add the following line to the /etc/ssh/sshd_config file:
         echo PermitRootLogin yes | sudo tee -a /etc/ssh/sshd_config
 - Restart the SSH service:
@@ -51,5 +51,3 @@ Scripts to install and configure a basic Ubuntu CORE system with options for gui
 # TODO List
 1. Configure wifi detection and setup.
 - Configure LibreOffice installation.
-- Configure Firefox .desktop file and menu entries.
-- Refactor network settings.
