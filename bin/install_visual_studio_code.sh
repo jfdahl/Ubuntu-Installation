@@ -13,11 +13,11 @@ local_file_location=/tmp/visual_studio_code.tar.gz
 remote_file_location=https://go.microsoft.com/fwlink/?LinkID=620884 # 64bit tarball
 install_location=/usr/share
 wget -O ${local_file_location} ${remote_file_location}
-tar -xzf ${local_file_location} -C ${install_location}
-ln -s ${install_location}/VSCode-linux-x64/code /usr/bin
+sudo tar -xzf ${local_file_location} -C ${install_location}
+sudo ln -s ${install_location}/VSCode-linux-x64/code /usr/bin
 rm ${local_file_location}
 
-cat >> /usr/share/applications/code.desktop << EOF
+cat >> /tmp/code.desktop << EOF
 [Desktop Entry]
 Name=Visual Studio Code
 Comment=Text Editor.
@@ -30,3 +30,5 @@ Categories=TextEditor;Development;
 Terminal=false
 MimeType=text/plain
 EOF
+
+sudo mv /tmp/code.desktop /usr/share/applications/
