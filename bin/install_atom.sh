@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-[[ $(which git) ]] || sudo apt-get install -y git || exit 1
+[[ $(which git) ]] || \
+sudo apt-get install -y git || \
+exit 1
 
 local_file_location=/tmp/atom.deb
 remote_file_location=https://atom.io/download/deb
