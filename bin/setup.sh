@@ -10,7 +10,13 @@ mkdir -p /home/public/bin
 cp -r * /home/public/bin/
 chown -R root:users /home/public
 chmod -R 775 /home/public/bin
+
 ln -s /home/public/bin /etc/skel/bin
+cat << EOF >> /etc/skel/.profile
+
+[ -f ~/bin/env.sh ] || . ~/bin/env.sh
+
+EOF
 
 # Configure package manager.
 sed -i.bak \
@@ -46,31 +52,33 @@ net.ipv6.conf.lo.disable_ipv6 = 1
 EOF
 
 $WIFI && {
-cat << EOF >> /home/public/bin/env.sh
+cat >> /home/public/bin/env.sh << EOF
 alias scanap='nmcli d wifi list'
 EOF
 }
 
-sed -i.bak \ # Disable DNSMASQ
+# Disable DNSMASQ
+sed -i.bak \
     's/^dns=dnsmasq/#dns=dnsmasq/' \
     /etc/NetworkManager/NetworkManager.conf
 
-systemctl restart network
+# Cleanup temporary settings, update the default user and reboot ###############
+cp -r /home/public/bin /home/user/bin
+chown -R user:user /home/user/bin
+cat >> /home/user/.profile << EOF
 
-# Final action:
+[ -f ~/bin/env.sh ] && . ~/bin/env.sh
+
+EOF
+usermod -a -G users user
+usermod -p '!' root
+sed -i 's/^\(PermitRootLogin\) yes$/\1 no/' /etc/ssh/sshd_config
+
 # Setup firewall
 ufw allow ssh
 ufw default deny
 ufw enable << EOF
 y
 EOF
-
-# Cleanup temporary settings, update the default user and reboot
-cp -r /home/public/bin /home/user/bin
-chown -R user:user /home/user/bin
-
-usermod -a -G users user
-usermod -p '!' root
-sed -i 's/^\(PermitRootLogin\) yes$/\1 no/' /etc/ssh/sshd_config
 
 shutdown -r now
