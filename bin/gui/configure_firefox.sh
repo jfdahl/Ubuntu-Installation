@@ -29,23 +29,13 @@ Path=profile.default
 Default=1
 EOF
 
-function install_adblock_plus(){
-    file_name=addon-1865-latest.xpi
-    wget -q -O /tmp/${file_name} https://addons.mozilla.org/firefox/downloads/latest/adblock-plus/${file_name}
-    firefox /tmp/${file_name} 2>/dev/null
-    rm /tmp/${file_name}
-}
-
-
 function set_pref(){
     echo "user_pref(\"${1}\", ${2});" >> ${local_prefs}
 }
 
-
 function update_pref(){
     sed -i 's|^user_pref\("\${1}\", .*\);$|^user_pref(\"${1}\", ${2});$|' ${local_prefs}
 }
-
 
 function set_local_preferenes(){
     cp ${local_prefs} ${local_prefs}.bak
@@ -64,4 +54,3 @@ function set_local_preferenes(){
 }
 
 set_local_preferenes
-install_adblock_plus
