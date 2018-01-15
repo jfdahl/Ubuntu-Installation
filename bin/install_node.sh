@@ -1,11 +1,23 @@
 #!/usr/bin/env bash
 
+# Determine which file to install and where
+pattern=linux-x64.tar.gz
+install_location=${HOME}/.local/share
 
-# Binaries: https://nodejs.org/dist/v8.9.4/node-v8.9.4-linux-x64.tar.xz
-# Source: https://nodejs.org/dist/v8.9.4/node-v8.9.4.tar.gz
+# Determine the latest version number, file name, and installation folder name.
+remote_file_location=https://nodejs.org/dist/latest/
+remote_file_name=$(wget -q -O- ${remote_file_location} | grep $pattern | cut -f2 -d\")
+local_file_location=/tmp/${remote_file_name}
+local_install_folder=$(echo "${remote_file_name}" | sed 's/\(node.*\).tar.gz/\1/')
 
+# Get and install the package.
+wget -O ${local_file_location} "${remote_file_location}/${remote_file_name}" && \
+mkdir -p ${install_location} && \
+tar -xzf ${local_file_location} -C ${install_location}
 
-sudo apt install -y nodejs npm
-if [ "$?" == "0" ] && [ ! -f /usr/bin/node ]; then
-    sudo ln -s /usr/bin/nodejs /usr/bin/node
+# Add links
+if [ "$?" == "0" ]; then
+    ln -fs ${install_location}/${local_install_folder}/bin/node ~/bin/node
+    ln -fs ${install_location}/${local_install_folder}/bin/npm ~/bin/npm
+    rm ${local_file_location}
 fi
