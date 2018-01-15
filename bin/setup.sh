@@ -9,9 +9,10 @@ fi
 mkdir -p /home/public/bin
 cp -r * /home/public/bin/
 chown -R root:users /home/public
-chmod -R 775 /home/public/bin
+chmod -R 755 /home/public/bin
 
-ln -s /home/public/bin /etc/skel/bin
+mkdir -p /etc/skel/bin
+cp /home/public/bin/env.sh /etc/skel/bin/
 cat >> /etc/skel/.profile << EOF
 
 [ -f ~/bin/env.sh ] || . ~/bin/env.sh
@@ -63,13 +64,6 @@ sed -i.bak \
     /etc/NetworkManager/NetworkManager.conf
 
 # Cleanup temporary settings, update the default user and reboot ###############
-cp -r /home/public/bin /home/user/bin
-chown -R user:user /home/user/bin
-cat >> /home/user/.profile << EOF
-
-[ -f ~/bin/env.sh ] && . ~/bin/env.sh
-
-EOF
 usermod -a -G users user
 usermod -p '!' root
 sed -i.bak 's/^\(PermitRootLogin\) yes$/\1 no/' /etc/ssh/sshd_config
