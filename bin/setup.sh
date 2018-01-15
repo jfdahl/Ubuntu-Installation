@@ -45,7 +45,7 @@ apt-get install -y ${core_packages}
 systemctl start NetworkManager
 systemctl enable NetworkManager
 # Disable IPV6
-echo >> /etc/sysctl.d/20-disable-ipv6.conf << EOF
+cat >> /etc/sysctl.d/20-disable-ipv6.conf << EOF
 net.ipv6.conf.all.disable_ipv6 = 1
 net.ipv6.conf.default.disable_ipv6 = 1
 net.ipv6.conf.lo.disable_ipv6 = 1
