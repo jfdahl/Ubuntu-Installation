@@ -12,7 +12,7 @@ chown -R root:users /home/public
 chmod -R 775 /home/public/bin
 
 ln -s /home/public/bin /etc/skel/bin
-cat << EOF >> /etc/skel/.profile
+cat >> /etc/skel/.profile << EOF
 
 [ -f ~/bin/env.sh ] || . ~/bin/env.sh
 
@@ -37,7 +37,7 @@ wifi_count=$(( $pci_wifi_count + $usb_wifi_count ))
 [ ${wifi_count} -gt 0 ] && WIFI=true || WIFI=false
 
 # Install default packages
-core_packages="git htop mc mtr pv network-manager"
+core_packages="dialog git network-manager"
 $WIFI && core_packages="${core_packages} rfkill wireless-tools wpasupplicant"
 apt-get install -y ${core_packages}
 
@@ -72,7 +72,7 @@ cat >> /home/user/.profile << EOF
 EOF
 usermod -a -G users user
 usermod -p '!' root
-sed -i 's/^\(PermitRootLogin\) yes$/\1 no/' /etc/ssh/sshd_config
+sed -i.bak 's/^\(PermitRootLogin\) yes$/\1 no/' /etc/ssh/sshd_config
 
 # Setup firewall
 ufw allow ssh
