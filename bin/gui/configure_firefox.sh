@@ -2,7 +2,7 @@
 # Depends: Firefox is installed
 
 [ $(which firefox) ] || \
-sudo /home/public/bin/install_firefox.sh || \
+sudo ./install_firefox.sh || \
 exit 1
 
 home_page=http://ipinfo.io/
