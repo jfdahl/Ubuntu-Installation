@@ -1,13 +1,5 @@
 #!/usr/bin/env bash
 
-[ -d ~/bin ] || ln -s /user/public/bin ${HOME}/bin
-cd ${HOME}/bin
-cat << EOF >> ${HOME}/.profile
-
-[ -f ~/bin/env.sh ] || . ~/bin/env.sh
-
-EOF
-
 #Configure Thunar
 xfconf-query --channel thunar --property /misc-full-path-in-title --create --type bool --set true
 xfconf-query --channel thunar --property /default-view --create --type string --set ThunarDetailsView
