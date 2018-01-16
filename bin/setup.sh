@@ -15,7 +15,7 @@ mkdir -p /etc/skel/bin
 cp /home/public/bin/env.sh /etc/skel/bin/
 cat >> /etc/skel/.profile << EOF
 
-[ -f ~/bin/env.sh ] || . ~/bin/env.sh
+[ -f ~/bin/env.sh ] && . ~/bin/env.sh
 
 EOF
 
