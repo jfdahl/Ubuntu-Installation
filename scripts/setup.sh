@@ -1,0 +1,107 @@
+#!/usr/bin/env bash
+
+default_user=user
+scripts_source="https://gitlab.com/jfdahl/myscripts.git"
+
+cd /tmp
+
+# Setup swap file ##############################################################
+fallocate -l 2048M /swapfile
+chmod 0600 /swapfile
+mkswap /swapfile
+sysctl -w vm.swappiness=1
+swapon /swapfile
+mkdir -p /etc/sysctl.d
+echo 'vm.swappiness = 1' >> /etc/sysctl.d/99-sysctl.conf
+echo '/swapfile none    swap    deafults    0   0' >> /etc/fstab
+
+# Configure package manager ####################################################
+sed -i.bak \
+    's|# \(deb http://archive.canonical.com/ubuntu artful partner\)|\1|g' \
+    /etc/apt/sources.list
+apt-get update -qq
+
+# Configure Grub ###############################################################
+sed -i.bak \
+    's|\(GRUB_CMDLINE_LINUX_DEFAULT="\).*?"|\1"|' \
+    /etc/default/grub
+update-grub
+
+# Check for WIFI hardware ######################################################
+pci_wifi_count=$(lspci | egrep -ic 'wifi|wlan|wireless')
+usb_wifi_count=$(lsusb | egrep -ic 'wifi|wlan|wireless')
+wifi_count=$(( $pci_wifi_count + $usb_wifi_count ))
+[ ${wifi_count} -gt 0 ] && WIFI=true || WIFI=false
+
+# Install default packages #####################################################
+core_packages="ufw sudo git"
+wifi_packages="rfkill dialog wireless-tools wpasupplicant network-manager"
+$WIFI && core_packages="${core_packages} ${wifi_packages}"
+apt-get install -y ${core_packages}
+
+# Networking ###################################################################
+# Disable IPv6
+if [ -z /etc/sysctl.d/20-disable-ipv6.conf ]; then
+cat >> /etc/sysctl.d/20-disable-ipv6.conf << EOF
+net.ipv6.conf.all.disable_ipv6 = 1
+net.ipv6.conf.default.disable_ipv6 = 1
+net.ipv6.conf.lo.disable_ipv6 = 1
+EOF
+fi
+
+$WIFI && {
+systemctl start NetworkManager
+systemctl enable NetworkManager
+sed -i.bak \
+    's/^dns=dnsmasq/#dns=dnsmasq/' \
+    /etc/NetworkManager/NetworkManager.conf
+cat >> /home/public/bin/env.sh << EOF
+alias scanap='nmcli d wifi list'
+EOF
+}
+
+
+# Setup the public folders
+mkdir -p /home/public/bin
+cat >> /home/public/bin/env.sh << EOF
+export PS1="-\n\h (\u)\n\w\n> "
+alias ll='ls -l'
+alias lla='ls -la'
+EOF
+cat >> /home/public/bin/add_env.sh << EOF
+mkdir -p ~/bin
+cp env.sh ~/bin/
+cat >> ~/.profile << EEOF
+
+# Load the environment script if it exists.
+[ -f ~/bin/env.sh ] && . ~/bin/env.sh
+
+EEOF
+. ~/bin/env.sh
+EOF
+cat >> /home/public/bin/get_scripts.sh << EOF
+mkdir -p /home/public/Git
+git clone ${scripts_source} /home/public/Git/scripts
+chmod -R +x /home/public/Git/scripts
+EOF
+chown -R root:users /home/public
+chmod -R 755 /home/public/bin
+
+
+
+# Cleanup temporary settings, update the default user and reboot ###############
+sed -i.bak 's/^\(PermitRootLogin\) yes$/\1 no/' /etc/ssh/sshd_config
+
+usermod -aG users,sudo,ssh ${default_user}
+ln -s /home/public /home/${default_user}/public
+usermod -p '!' root
+
+
+# Setup firewall
+ufw allow ssh
+ufw default deny
+ufw enable << EOF
+y
+EOF
+
+shutdown -r now

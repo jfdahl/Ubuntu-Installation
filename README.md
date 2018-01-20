@@ -31,13 +31,11 @@ Scripts to install and configure a basic Ubuntu CORE system with options for gui
 - Access root priviledges:
       sudo su
 - Set the root password temporarily. The script will reset it.
-      chpasswd root:root
+      passwd
 - Get the accessible IP Address of the target system.
       ip addr
-- Install the SSH server if it was not installed during the base installation.
-      apt install ssh
-- Add the following line to the /etc/ssh/sshd_config file:
-      echo PermitRootLogin yes >> /etc/ssh/sshd_config
+- Update the /etc/ssh/sshd_config file to allow the root to login with a password. The script will disable this capability.
+      sed -i.bak 's/^\(PermitRootLogin\) prohibit-password$/\1 yes/' /etc/ssh/sshd_config
 - Restart the SSH service:
       systemctl restart ssh
 
