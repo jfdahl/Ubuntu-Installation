@@ -1,12 +1,16 @@
 #!/usr/bin/env bash
 
 default_user=user
-scripts_source="https://gitlab.com/jfdahl/myscripts.git"
+release_codename=$(lsb_release -cs)
 
 cd /tmp
 
 # Setup swap file ##############################################################
-fallocate -l 2048M /swapfile
+if [ -f /swapfile ]; then
+    swapoff /swapfile
+    rm /swapfile
+fi
+fallocate -l 1024M /swapfile
 chmod 0600 /swapfile
 mkswap /swapfile
 sysctl -w vm.swappiness=1
@@ -17,7 +21,7 @@ echo '/swapfile none    swap    deafults    0   0' >> /etc/fstab
 
 # Configure package manager ####################################################
 sed -i.bak \
-    's|# \(deb http://archive.canonical.com/ubuntu artful partner\)|\1|g' \
+    "s|# \(deb http://archive.canonical.com/ubuntu ${release_codename} partner\)|\1|g" \
     /etc/apt/sources.list
 apt-get update -qq
 
@@ -63,6 +67,7 @@ EOF
 
 # Setup the public folders
 mkdir -p /home/public/bin
+cp -r /tmp/scripts /home/public/bin/
 cat >> /home/public/bin/env.sh << EOF
 export PS1="-\n\h (\u)\n\w\n> "
 alias ll='ls -l'
@@ -78,11 +83,6 @@ cat >> ~/.profile << EEOF
 
 EEOF
 . ~/bin/env.sh
-EOF
-cat >> /home/public/bin/get_scripts.sh << EOF
-mkdir -p /home/public/Git
-git clone ${scripts_source} /home/public/Git/scripts
-chmod -R +x /home/public/Git/scripts
 EOF
 chown -R root:users /home/public
 chmod -R 755 /home/public/bin
