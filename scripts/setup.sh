@@ -36,33 +36,12 @@ pci_wifi_count=$(lspci | egrep -ic 'wifi|wlan|wireless')
 usb_wifi_count=$(lsusb | egrep -ic 'wifi|wlan|wireless')
 wifi_count=$(( $pci_wifi_count + $usb_wifi_count ))
 [ ${wifi_count} -gt 0 ] && WIFI=true || WIFI=false
+wifi_packages="rfkill dialog wireless-tools wpasupplicant network-manager"
 
 # Install default packages #####################################################
 core_packages="ufw sudo git"
-wifi_packages="rfkill dialog wireless-tools wpasupplicant network-manager"
 $WIFI && core_packages="${core_packages} ${wifi_packages}"
 apt-get install -y ${core_packages}
-
-# Networking ###################################################################
-# Disable IPv6
-if [ -z /etc/sysctl.d/20-disable-ipv6.conf ]; then
-cat >> /etc/sysctl.d/20-disable-ipv6.conf << EOF
-net.ipv6.conf.all.disable_ipv6 = 1
-net.ipv6.conf.default.disable_ipv6 = 1
-net.ipv6.conf.lo.disable_ipv6 = 1
-EOF
-fi
-
-$WIFI && {
-systemctl start NetworkManager
-systemctl enable NetworkManager
-sed -i.bak \
-    's/^dns=dnsmasq/#dns=dnsmasq/' \
-    /etc/NetworkManager/NetworkManager.conf
-cat >> /home/public/bin/env.sh << EOF
-alias scanap='nmcli d wifi list'
-EOF
-}
 
 
 # Setup the public folders
@@ -87,7 +66,26 @@ EOF
 chown -R root:users /home/public
 chmod -R 755 /home/public/bin
 
+# Configure Networking ########################################################
+# Disable IPv6
+if [ -z /etc/sysctl.d/20-disable-ipv6.conf ]; then
+cat >> /etc/sysctl.d/20-disable-ipv6.conf << EOF
+net.ipv6.conf.all.disable_ipv6 = 1
+net.ipv6.conf.default.disable_ipv6 = 1
+net.ipv6.conf.lo.disable_ipv6 = 1
+EOF
+fi
 
+$WIFI && {
+systemctl start NetworkManager
+systemctl enable NetworkManager
+sed -i.bak \
+    's/^dns=dnsmasq/#dns=dnsmasq/' \
+    /etc/NetworkManager/NetworkManager.conf
+cat >> /home/public/bin/env.sh << EOF
+alias scanap='nmcli d wifi list'
+EOF
+}
 
 # Cleanup temporary settings, update the default user and reboot ###############
 sed -i.bak 's/^\(PermitRootLogin\) yes$/\1 no/' /etc/ssh/sshd_config
