@@ -48,7 +48,7 @@ apt-get install -y ${core_packages}
 mkdir -p /home/public/bin
 cp -r /tmp/scripts /home/public/bin/
 cat >> /home/public/bin/env.sh << EOF
-export PS1="-\n\h (\u)\n\w\n> "
+export PS1="-\n\h (\u)\n\w\nsh> "
 alias ll='ls -l'
 alias lla='ls -la'
 EOF
