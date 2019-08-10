@@ -34,7 +34,7 @@ Scripts to install and configure a basic Ubuntu CORE system with options for gui
       passwd
 - Get the accessible IP Address of the target system.
       ip addr
-- Update the /etc/ssh/sshd_config file to allow the root to login with a password. The script will disable this capability.
+- Update the /etc/ssh/sshd_config file to allow the root to login with a password. The script will disable this capability.  
       sed -i.bak 's/^\(PermitRootLogin\) prohibit-password$/\1 yes/' /etc/ssh/sshd_config
 - Restart the SSH service:
       systemctl restart ssh
